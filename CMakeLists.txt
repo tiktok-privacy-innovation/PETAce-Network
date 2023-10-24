@@ -30,7 +30,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "Build type (CMAKE_BUILD_TYPE): ${CMAKE_BUILD_TYPE}")
 
-project(NETWORK VERSION 0.1.0 LANGUAGES CXX C)
+project(NETWORK VERSION 0.2.0 LANGUAGES CXX C)
 
 ########################
 # Global configuration #

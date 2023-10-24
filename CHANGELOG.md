@@ -6,3 +6,7 @@
 
 - Added network abstract interface.
 - Added socket network implementation.
+
+## Version 0.2.0
+
+No update.

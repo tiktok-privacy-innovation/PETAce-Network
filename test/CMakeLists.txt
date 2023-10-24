@@ -14,13 +14,13 @@
 
 cmake_minimum_required(VERSION 3.14)
 
-project(NETWORKTest VERSION 0.1.0 LANGUAGES CXX C)
+project(NETWORKTest VERSION 0.2.0 LANGUAGES CXX C)
 
 # If not called from root CMakeLists.txt
 if(NOT DEFINED NETWORK_BUILD_TEST)
     set(NETWORK_BUILD_TEST ON)
 
-    find_package(PETAce-Network 0.1.0 EXACT REQUIRED)
+    find_package(PETAce-Network 0.2.0 EXACT REQUIRED)
 
     # Must define these variables and include macros
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)

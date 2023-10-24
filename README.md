@@ -70,13 +70,13 @@ This project is licensed under the [Apache-2.0 License](LICENSE).
 
 To cite PETAce in academic papers, please use the following BibTeX entries.
 
-### Version 0.1.0
+### Version 0.2.0
 
 ```tex
     @misc{petace,
-        title = {PETAce (release 0.1.0)},
+        title = {PETAce (release 0.2.0)},
         howpublished = {\url{https://github.com/tiktok-privacy-innovation/PETAce}},
-        month = July,
+        month = Oct,
         year = 2023,
         note = {TikTok Pte. Ltd.},
         key = {PETAce}
