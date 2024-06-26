@@ -19,7 +19,7 @@
 
 #include "network/net_factory.h"
 
-void scoket_example(const std::string& remote_address, std::uint16_t remote_port, std::uint16_t local_port) {
+void socket_example(const std::string& remote_address, std::uint16_t remote_port, std::uint16_t local_port) {
     petace::network::NetParams params;
     params.remote_addr = remote_address;
     params.remote_port = remote_port;

@@ -20,10 +20,15 @@ namespace petace {
 namespace network {
 
 struct NetParams {
+    // for socket
     std::string local_addr;
     std::uint16_t local_port;
     std::string remote_addr;
     std::uint16_t remote_port;
+    // for agent
+    std::string shared_topic;  // shared topic between a couple of petace instances
+    std::string local_agent;   // the address of the local agent server
+    std::string remote_party;  // the name of the remote party
 };
 
 /**

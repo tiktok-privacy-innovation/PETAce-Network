@@ -1,0 +1,50 @@
+// Copyright 2023 TikTok Pte. Ltd.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package petnet.simple.v1;
+
+message ClientSimpleSendRequest {
+    string message_id = 1;
+    string receiver_id = 2;
+    bytes payload = 3;
+}
+
+message ClientSimpleRecvRequest {
+    string message_id = 1;
+}
+
+message ServerSimpleSendRequest {
+    string message_id = 1;
+    bytes payload = 2;
+}
+
+message Response {
+    bool success = 1;
+    optional bytes payload = 2;
+    optional int32 error_code = 3;
+    optional string error_msg = 4;
+}
+
+service SimpleRequestServer {
+    // client send data to local server
+    rpc ClientSimpleSend (ClientSimpleSendRequest) returns (Response);
+
+    // client recv data from local server
+    rpc ClientSimpleRecv (ClientSimpleRecvRequest) returns (Response);
+
+    // local server send data to remote server
+    rpc ServerSimpleSend (ServerSimpleSendRequest) returns (Response);
+}

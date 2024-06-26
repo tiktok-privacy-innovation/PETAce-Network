@@ -14,13 +14,13 @@
 
 cmake_minimum_required(VERSION 3.14)
 
-project(NETWORKExamples VERSION 0.2.0 LANGUAGES CXX)
+project(NETWORKExamples VERSION 0.3.0 LANGUAGES CXX)
 
 # If not called from root CMakeLists.txt
 if(NOT DEFINED NETWORK_BUILD_EXAMPLE)
     set(NETWORK_BUILD_EXAMPLE ON)
 
-    find_package(PETAce-Network 0.2.0 EXACT REQUIRED)
+    find_package(PETAce-Network 0.3.0 EXACT REQUIRED)
 
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 endif()
@@ -33,6 +33,11 @@ if(NETWORK_BUILD_EXAMPLE)
         ${CMAKE_CURRENT_LIST_DIR}/socket_example.cpp
         ${CMAKE_CURRENT_LIST_DIR}/example.cpp
     )
+    if(NETWORK_BUILD_AGENT)
+        set(NETWORK_EXAMPLE_FILES ${NETWORK_EXAMPLE_FILES}
+            ${CMAKE_CURRENT_LIST_DIR}/agent_example.cpp
+        )
+    endif()
 
     add_executable(network_example ${NETWORK_EXAMPLE_FILES})
 

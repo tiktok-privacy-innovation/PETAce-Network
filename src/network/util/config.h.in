@@ -22,6 +22,8 @@
 // Are we in debug mode?
 #cmakedefine NETWORK_DEBUG
 
+#cmakedefine NETWORK_BUILD_AGENT
+
 // C++17 features
 #cmakedefine NETWORK_USE_STD_BYTE
 #cmakedefine NETWORK_USE_SHARED_MUTEX

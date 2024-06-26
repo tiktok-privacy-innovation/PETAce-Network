@@ -32,6 +32,7 @@ set(PETAce-Network_STATIC_FOUND FALSE)
 set(PETAce-Network_SHARED_FOUND FALSE)
 
 set(NETWORK_DEBUG @NETWORK_DEBUG@)
+set(NETWORK_BUILD_AGENT @NETWORK_BUILD_AGENT@)
 
 # Add the current directory to the module search path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
@@ -39,6 +40,11 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 network_find_dependency(Threads)
+
+if(NETWORK_BUILD_AGENT)
+    network_find_dependency(protobuf)
+    network_find_dependency(gRPC)
+endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/PETAce-NetworkTargets.cmake)
 

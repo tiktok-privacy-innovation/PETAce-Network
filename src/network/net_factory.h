@@ -17,16 +17,22 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
+#include "network/util/config.h"
+
+#ifdef NETWORK_BUILD_AGENT
+#include "network/net_agent.h"
+#endif
 #include "network/net_socket.h"
 #include "network/network.h"
 
 namespace petace {
 namespace network {
 
-enum class NetScheme : std::uint32_t { SOCKET = 0, GRPC = 1 };
+enum class NetScheme : std::uint32_t { SOCKET = 0, AGENT = 1 };
 
 using NetCreator = std::function<std::shared_ptr<Network>(const NetParams& params)>;
 
@@ -77,6 +83,9 @@ public:
 protected:
     NetFactory() {
         register_net(NetScheme::SOCKET, create_socket);
+#ifdef NETWORK_BUILD_AGENT
+        register_net(NetScheme::AGENT, create_agent);
+#endif
     }
     ~NetFactory() {
     }

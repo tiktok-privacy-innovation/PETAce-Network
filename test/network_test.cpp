@@ -30,7 +30,7 @@ namespace network {
 
 class NetWorkTest : public ::testing::Test {
 public:
-    void net_io(bool is_sender) {
+    void socket_io(bool is_sender) {
         std::shared_ptr<NetSocket> net;
         if (is_sender) {
             net = std::make_shared<NetSocket>("127.0.0.1", 8890, 8891);
@@ -51,7 +51,7 @@ public:
         }
     }
 
-    void net_factory(bool is_sender) {
+    void socket_factory(bool is_sender) {
         send_msg_.resize(len_);
         recv_msg_.resize(len_);
         for (std::size_t i = 0; i < len_; i++) {
@@ -80,7 +80,7 @@ public:
         }
     }
 
-    void net_ipv6(bool is_sender) {
+    void socket_ipv6(bool is_sender) {
         send_msg_.resize(len_);
         recv_msg_.resize(len_);
         for (std::size_t i = 0; i < len_; i++) {
@@ -116,7 +116,7 @@ public:
     std::thread t_[2];
 };
 
-TEST_F(NetWorkTest, net_io) {
+TEST_F(NetWorkTest, socket_io) {
     pid_t pid;
     int status;
 
@@ -125,10 +125,10 @@ TEST_F(NetWorkTest, net_io) {
         status = -1;
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
-        net_io(true);
+        socket_io(true);
         exit(EXIT_SUCCESS);
     } else {
-        net_io(false);
+        socket_io(false);
         while (waitpid(pid, &status, 0) < 0) {
             if (errno != EINTR) {
                 status = -1;
@@ -142,7 +142,7 @@ TEST_F(NetWorkTest, net_io) {
     }
 }
 
-TEST_F(NetWorkTest, net_factory) {
+TEST_F(NetWorkTest, socket_factory) {
     pid_t pid;
     int status;
 
@@ -151,10 +151,10 @@ TEST_F(NetWorkTest, net_factory) {
         status = -1;
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
-        net_factory(true);
+        socket_factory(true);
         exit(EXIT_SUCCESS);
     } else {
-        net_factory(false);
+        socket_factory(false);
         while (waitpid(pid, &status, 0) < 0) {
             if (errno != EINTR) {
                 status = -1;
@@ -168,7 +168,7 @@ TEST_F(NetWorkTest, net_factory) {
     }
 }
 
-TEST_F(NetWorkTest, net_ipv6) {
+TEST_F(NetWorkTest, socket_ipv6) {
     pid_t pid;
     int status;
 
@@ -177,10 +177,10 @@ TEST_F(NetWorkTest, net_ipv6) {
         status = -1;
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
-        net_ipv6(true);
+        socket_ipv6(true);
         exit(EXIT_SUCCESS);
     } else {
-        net_ipv6(false);
+        socket_ipv6(false);
         while (waitpid(pid, &status, 0) < 0) {
             if (errno != EINTR) {
                 status = -1;

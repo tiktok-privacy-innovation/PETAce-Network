@@ -8,10 +8,34 @@ repos:
       - id: check-symlinks
       - id: check-yaml
       - id: end-of-file-fixer
+        exclude: >-
+          (?x)^(
+            .*\.pb\.h$|
+            .*\.pb\.cc$|
+            .*\.proto$
+          )$
       - id: forbid-submodules
       - id: mixed-line-ending
+        exclude: >-
+          (?x)^(
+            .*\.pb\.h$|
+            .*\.pb\.cc$|
+            .*\.proto$
+          )$
       - id: trailing-whitespace
+        exclude: >-
+          (?x)^(
+            .*\.pb\.h$|
+            .*\.pb\.cc$|
+            .*\.proto$
+          )$
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v16.0.0
     hooks:
     - id: clang-format
+      exclude: >-
+        (?x)^(
+          .*\.pb\.h$|
+          .*\.pb\.cc$|
+          .*\.proto$
+        )$

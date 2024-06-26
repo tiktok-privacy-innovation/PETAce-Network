@@ -16,4 +16,11 @@
 
 #include <string>
 
-void scoket_example(const std::string& remote_address, std::uint16_t remote_port, std::uint16_t local_port);
+#include "network/util/config.h"
+
+void socket_example(const std::string& remote_address, std::uint16_t remote_port, std::uint16_t local_port);
+
+#ifdef NETWORK_BUILD_AGENT
+void agent_example(const std::string& shared_topic, const std::string& local_agent, const std::string& local_party,
+        const std::string& remote_agent, const std::string& remote_party);
+#endif

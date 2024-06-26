@@ -18,7 +18,7 @@ thirdparty/
 ########################################################################################
 #### The following are based on templates from https://github.com/github/gitignore. ####
 ########################################################################################
-
+.idea/
 *.pc
 .config
 *.args.json

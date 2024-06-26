@@ -30,7 +30,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "Build type (CMAKE_BUILD_TYPE): ${CMAKE_BUILD_TYPE}")
 
-project(NETWORK VERSION 0.2.0 LANGUAGES CXX C)
+project(NETWORK VERSION 0.3.0 LANGUAGES CXX C)
 
 ########################
 # Global configuration #
@@ -94,6 +94,7 @@ set(NETWORK_THIRDPARTY_DIR ${CMAKE_CURRENT_BINARY_DIR}/thirdparty)
 # Installation tree
 set(NETWORK_CONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/PETAce-Network-${NETWORK_VERSION_MAJOR}.${NETWORK_VERSION_MINOR})
 set(NETWORK_INCLUDES_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/PETAce-${NETWORK_VERSION_MAJOR}.${NETWORK_VERSION_MINOR})
+set(NETWORK_THIRDPARTY_INCLUDES_INSTALL_DIR ${NETWORK_INCLUDES_INSTALL_DIR}/thirdparty)
 
 # Make the install target depend on the all target.
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY OFF)
@@ -147,7 +148,11 @@ option(NETWORK_ENABLE_GCOV ${NETWORK_ENABLE_GCOV_STR} OFF)
 message(STATUS "NETWORK_ENABLE_GCOV: ${NETWORK_ENABLE_GCOV_STR}")
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NETWORK_ENABLE_GCOV)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-    set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -fprofile-arcs -ftest-coverage -lgcov")
+    if (LINUX)
+        set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -fprofile-arcs -ftest-coverage -lgcov")
+    else()
+        set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -fprofile-arcs -ftest-coverage")
+    endif()
 endif()
 
 # CMAKE_CXX_LINK_EXECUTABLE
@@ -168,6 +173,10 @@ set(NETWORK_BUILD_DEPS_OPTION_STR "Automatically download and build unmet depend
 option(NETWORK_BUILD_DEPS ${NETWORK_BUILD_DEPS_OPTION_STR} ON)
 message(STATUS "NETWORK_BUILD_DEPS: ${NETWORK_BUILD_DEPS}")
 
+set(NETWORK_BUILD_AGENT_STR "Build Agent")
+option(NETWORK_BUILD_AGENT ${NETWORK_BUILD_AGENT_STR} OFF)
+message(STATUS "NETWORK_BUILD_AGENT: ${NETWORK_BUILD_AGENT}")
+
 if(NETWORK_BUILD_DEPS)
     include(FetchContent)
     mark_as_advanced(FETCHCONTENT_BASE_DIR)
@@ -181,6 +190,28 @@ if(NOT TARGET Threads::Threads)
     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
     set(THREADS_PREFER_PTHREAD_FLAG TRUE)
     find_package(Threads REQUIRED)
+endif()
+
+if(NETWORK_BUILD_AGENT)
+    # protobuf::libprotobuf
+    if(NOT TARGET protobuf::libprotobuf)
+        find_package(protobuf QUIET REQUIRED)
+        if(protobuf_FOUND)
+            message(STATUS "protobuf: found")
+        else()
+            message(FATAL_ERROR "protobuf: not found, please download and install manually")
+        endif()
+    endif()
+
+    # gRPC::grpc++
+    if(NOT TARGET gRPC::grpc++)
+        find_package(gRPC 1.62 QUIET REQUIRED)
+        if(gRPC_FOUND)
+            message(STATUS "grpc: found")
+        else()
+            message(FATAL_ERROR "grpc: not found, please download and install manually")
+        endif()
+    endif()
 endif()
 
 #######################
@@ -218,6 +249,12 @@ if(NOT NETWORK_BUILD_SHARED_LIBS)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src/>)
     set_target_properties(network PROPERTIES VERSION ${NETWORK_VERSION})
     set_target_properties(network PROPERTIES OUTPUT_NAME petace_network-${NETWORK_VERSION_MAJOR}.${NETWORK_VERSION_MINOR})
+
+    if(NETWORK_BUILD_AGENT)
+        target_link_libraries(network PUBLIC gRPC::grpc++)
+        target_link_libraries(network PUBLIC protobuf::libprotobuf)
+    endif()
+
     install(TARGETS network EXPORT PETAce-NetworkTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -241,6 +278,12 @@ else()
     set_target_properties(network_shared PROPERTIES VERSION ${NETWORK_VERSION})
     set_target_properties(network_shared PROPERTIES SOVERSION ${NETWORK_VERSION_MAJOR}.${NETWORK_VERSION_MINOR})
     set_target_properties(network_shared PROPERTIES OUTPUT_NAME petace_network)
+
+    if(NETWORK_BUILD_AGENT)
+        target_link_libraries(network_shared PUBLIC gRPC::grpc++)
+        target_link_libraries(network_shared PUBLIC protobuf::libprotobuf)
+    endif()
+
     install(TARGETS network_shared EXPORT PETAce-NetworkTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

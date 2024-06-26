@@ -14,13 +14,13 @@
 
 cmake_minimum_required(VERSION 3.14)
 
-project(NETWORKTest VERSION 0.2.0 LANGUAGES CXX C)
+project(NETWORKTest VERSION 0.3.0 LANGUAGES CXX C)
 
 # If not called from root CMakeLists.txt
 if(NOT DEFINED NETWORK_BUILD_TEST)
     set(NETWORK_BUILD_TEST ON)
 
-    find_package(PETAce-Network 0.2.0 EXACT REQUIRED)
+    find_package(PETAce-Network 0.3.0 EXACT REQUIRED)
 
     # Must define these variables and include macros
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
@@ -73,7 +73,11 @@ if(NETWORK_BUILD_TEST)
         set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
     endif()
     if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NETWORK_ENABLE_GCOV)
-        set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -fprofile-arcs -ftest-coverage -lgcov")
+        if (LINUX)
+            set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -fprofile-arcs -ftest-coverage -lgcov")
+        else()
+            set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -fprofile-arcs -ftest-coverage")
+        endif()
     endif()
 
     add_executable(network_test ${NETWORK_TEST_FILES})
@@ -90,9 +94,9 @@ if(NETWORK_BUILD_TEST)
     if(NETWORK_DEBUG AND UNIX)
         # On macOS, only AddressSanitizer is enabled.
         # On Linux, LeakSanitizer is enabled by default.
-        target_compile_options(network_test PUBLIC -fsanitize=address)
-        target_link_options(network_test PUBLIC -fsanitize=address)
         if(NOT APPLE)
+            target_compile_options(network_test PUBLIC -fsanitize=address)
+            target_link_options(network_test PUBLIC -fsanitize=address)
             message(STATUS "Sanitizers enabled: address, leak")
         else()
             message(STATUS "Sanitizers enabled: address")

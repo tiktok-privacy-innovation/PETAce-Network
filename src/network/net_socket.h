@@ -54,6 +54,8 @@ public:
     ~NetSocket() override;
 
 private:
+    void clear();
+
     static void set_nodelay(int socket);
 
     static void set_delay(int socket);

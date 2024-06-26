@@ -14,37 +14,17 @@
 
 # Source files in this directory
 set(NETWORK_SOURCE_FILES ${NETWORK_SOURCE_FILES}
-${CMAKE_CURRENT_LIST_DIR}/net_socket.cpp
+${CMAKE_CURRENT_LIST_DIR}/simple.pb.cc
+${CMAKE_CURRENT_LIST_DIR}/simple.grpc.pb.cc
 )
-if(NETWORK_BUILD_AGENT)
-    set(NETWORK_SOURCE_FILES ${NETWORK_SOURCE_FILES}
-        ${CMAKE_CURRENT_LIST_DIR}/net_agent.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/grpc_client.cpp
-    )
-endif()
 
 # Add header files for installation
 install(
     FILES
-        ${CMAKE_CURRENT_LIST_DIR}/network.h
-        ${CMAKE_CURRENT_LIST_DIR}/net_socket.h
-        ${CMAKE_CURRENT_LIST_DIR}/net_factory.h
+        ${CMAKE_CURRENT_LIST_DIR}/simple.pb.h
+        ${CMAKE_CURRENT_LIST_DIR}/simple.grpc.pb.h
     DESTINATION
-        ${NETWORK_INCLUDES_INSTALL_DIR}/network
+        ${NETWORK_INCLUDES_INSTALL_DIR}/network/proto
 )
-
-if(NETWORK_BUILD_AGENT)
-    install(
-        FILES
-            ${CMAKE_CURRENT_LIST_DIR}/net_agent.h
-            ${CMAKE_CURRENT_LIST_DIR}/grpc_client.h
-        DESTINATION
-            ${NETWORK_INCLUDES_INSTALL_DIR}/network
-    )
-endif()
-
-if(NETWORK_BUILD_AGENT)
-    add_subdirectory(proto)
-endif()
 
 set(NETWORK_SOURCE_FILES ${NETWORK_SOURCE_FILES} PARENT_SCOPE)
